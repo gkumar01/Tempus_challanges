@@ -12,6 +12,8 @@ from optparse import OptionParser
 def get_allele_freq(json_data):
 	"""
 	 Extract allele frequency information from json data dictionary
+	 args: json data dictionary
+	 returns: string value
 	"""
 	
 	freq='.'
@@ -26,6 +28,8 @@ def get_allele_freq(json_data):
 def get_snp_id(json_data):
 	"""
 	Extract snp id from jason data
+	args: json data dictionary
+	returns: string value
 	"""
 	
 	rsid='.'
@@ -48,9 +52,31 @@ def get_ensemble_geneid(json_data):
 		
 	return ensemble_id
 
+def get_variant_field_value(json_data,flag=None):
+	"""
+	Extract snp id/gene_id and allele frequence from jason data
+	args: 1. json_data = json data dictionary, 2. flag= rsid/genes/allele_freq
+	returns: string value	
+	"""
+	field_value = '.'
+	
+	try:
+		field_value = json_data['variant'][flag]
+	except KeyError:
+		pass
+	
+	if flag == 'genes':
+		field_value = '/'.join(field_value)
+	else:
+		pass
+		
+	return field_value
+
 def request_variant_info(variant_id):
 	"""
-	Request variant information
+	Request variant information using REST API of ExAC
+	args: 1 variant_id as tring
+	returns: json data dictionary 
 	"""
 	url_base = "http://exac.hms.harvard.edu"
 	resp = requests.get(url_base+'/rest/variant/'+variant_id)
@@ -72,7 +98,9 @@ def request_variant_info(variant_id):
 def get_variant_type(lst=[]):
 	
 	"""
-	For annotation select variant 'del'  from multiple variant sub types 	
+	For annotation select variant 'del'  from multiple variant sub types
+	args: list
+	returns: string
 	"""
 	
 	#print(lst)
@@ -128,8 +156,6 @@ def run(options,args):
 				)
 		print (",".join(header))
 		
-		#count=0
-		
 		#Loop through lines/records for annotation
 		for record in vcf_reader:
 			
@@ -147,14 +173,16 @@ def run(options,args):
 				variant_json_info = request_variant_info(variant_name)
 			
 			#parse json data to get allele frequency, gene_id and snp_id
-			allele_frequency = get_allele_freq(variant_json_info)
-			gene_id = get_ensemble_geneid(variant_json_info)
-			snp_id = get_snp_id(variant_json_info)
+			#allele_frequency = get_allele_freq(variant_json_info)
+			#gene_id = get_ensemble_geneid(variant_json_info)
+			#snp_id = get_snp_id(variant_json_info)
+			
+			#parse json data to get allele frequency, gene_id and snp_id
+			allele_frequency = get_variant_field_value(variant_json_info,'allele_freq')
+			gene_id = get_variant_field_value(variant_json_info,'genes')
+			snp_id = get_variant_field_value(variant_json_info,'rsid')
 			#print('%s,%s,%s' %(allele_frequency,gene_id,snp_id))
 	
-			#count +=1
-			#if(count > 1000):
-			#	sys.exit('T')
 			
 			#variant_type = record.INFO['TYPE']
 			#variant_type = get_variant_type(record.INFO['TYPE'])
