@@ -25,8 +25,8 @@ USAGE: python tempus_create_annotation.py -i Challenge_data.vcf > tempus_variant
 6. Allele_Frequency:
 	Allele frequency of variant from Broad Institute ExAC Project API
 
-8.Ensemble_gene_id:
+7.Ensemble_gene_id:
 	Ensemble gene identifier
 
-9.SNP_id:
+8.SNP_id:
 	dbSNP identifier
