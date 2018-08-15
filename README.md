@@ -6,7 +6,7 @@
 
 USAGE: python tempus_create_annotation.py -i Challenge_data.vcf > tempus_variant_annotation.csv
 
-#Description of columns  tempus_challange_variant_annotation.csv
+#Output File  tempus_challange_variant_annotation.csv header description
 1. Variant: variant id represented in the format
 	chr-genomic coordinate-Reference Allele-ALT Allele
 
